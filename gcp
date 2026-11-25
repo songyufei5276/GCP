@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GCP 笔试通俗学习资料 | 比逊医疗校园招聘</title>
+<style>
+  :root{
+    --bg:#f6f8fb;
+    --card:#ffffff;
+    --ink:#1f2937;
+    --ink-soft:#4b5563;
+    --ink-mute:#6b7280;
+    --line:#e5e7eb;
+    --blue:#1d4ed8;
+    --blue-soft:#eff6ff;
+    --teal:#0f766e;
+    --teal-soft:#ecfdf5;
+    --amber:#b45309;
+    --amber-soft:#fffbeb;
+    --red:#b91c1c;
+    --red-soft:#fef2f2;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Source Han Sans SC",sans-serif;
+    font-size:15px;
+    line-height:1.75;
+  }
+  .layout{display:flex;max-width:1360px;margin:0 auto;gap:24px;padding:24px}
+  /* 侧边目录 */
+  aside{
+    width:228px;flex:0 0 228px;position:sticky;top:24px;height:calc(100vh - 48px);
+    overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 14px;
+  }
+  aside h2{font-size:13px;letter-spacing:.12em;color:var(--ink-mute);margin:0 0 12px 8px}
+  aside a{display:block;color:var(--ink-soft);text-decoration:none;font-size:13px;padding:6px 9px;border-radius:8px;margin-bottom:2px}
+  aside a:hover{background:var(--blue-soft);color:var(--blue)}
+  main{flex:1;min-width:0}
+  .hero{
+    background:linear-gradient(120deg,#1e3a8a,#1d4ed8 55%,#0f766e);
+    color:#fff;border-radius:18px;padding:32px 34px;box-shadow:0 8px 24px rgba(29,78,216,.18)
+  }
+  .hero .tag{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:2px 12px;font-size:12px;margin-bottom:12px}
+  .hero h1{margin:0 0 8px;font-size:30px;line-height:1.35}
+  .hero p{margin:4px 0;color:rgba(255,255,255,.9);font-size:14px}
+  .hero .meta{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px}
+  .hero .meta span{background:rgba(255,255,255,.14);border-radius:8px;padding:5px 11px;font-size:12px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 28px;margin-top:20px;scroll-margin-top:20px}
+  section>h2{font-size:21px;margin:0 0 6px;padding-bottom:12px;border-bottom:2px solid var(--blue-soft)}
+  section>h2 .num{color:var(--blue);margin-right:8px}
+  .lead{color:var(--ink-soft);margin:12px 0 18px}
+  h3{font-size:17px;margin:24px 0 10px;color:var(--ink)}
+  h4{font-size:15px;margin:16px 0 6px;color:var(--ink)}
+  p{margin:8px 0}
+  ul,ol{padding-left:22px;margin:8px 0}
+  li{margin:5px 0}
+  .note{background:var(--amber-soft);border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0;font-size:14px;color:#78350f}
+  .tip{background:var(--teal-soft);border-left:4px solid var(--teal);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0;font-size:14px;color:#064e3b}
+  .danger{background:var(--red-soft);border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0;font-size:14px;color:#7f1d1d}
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:14px 0}
+  .card{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:#fff}
+  .card .role{font-weight:700;color:var(--blue);font-size:15px;margin-bottom:6px}
+  .card .role.teal{color:var(--teal)}
+  .card .role.amber{color:var(--amber)}
+  .card .role.red{color:var(--red)}
+  .card p,.card ul{font-size:14px;color:var(--ink-soft)}
+  .chapter{border:1px solid var(--line);border-left:5px solid var(--blue);border-radius:10px;padding:16px 18px;margin:16px 0;background:#fff}
+  .chapter h3{margin:0 0 8px;font-size:17px}
+  .chapter .plain{background:var(--blue-soft);border-radius:8px;padding:10px 13px;margin:10px 0;color:#1e3a8a;font-size:14px}
+  .chapter .key{font-size:14px;color:var(--ink-soft)}
+  .chapter .key b{color:var(--ink)}
+  .chip{display:inline-block;background:var(--blue-soft);color:var(--blue);border-radius:6px;padding:1px 8px;font-size:12px;margin:2px 4px 2px 0}
+  .chip.g{background:var(--teal-soft);color:var(--teal)}
+  .chip.y{background:var(--amber-soft);color:var(--amber)}
+  .chip.r{background:var(--red-soft);color:var(--red)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#f3f6fb;color:var(--ink);font-weight:600;white-space:nowrap}
+  tr:nth-child(even) td{background:#fbfcfe}
+  td.num{white-space:nowrap;color:var(--blue);font-weight:600}
+  .big{font-size:24px;font-weight:700;color:var(--blue);line-height:1.2}
+  .grid-num{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
+  .grid-num .card{text-align:center;padding:16px 10px}
+  .grid-num .card small{display:block;color:var(--ink-mute);font-size:12px;margin-top:6px}
+  details{border:1px solid var(--line);border-radius:10px;margin:10px 0;background:#fff}
+  summary{cursor:pointer;padding:12px 15px;font-weight:600;font-size:14px;color:var(--ink);list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"＋";color:var(--blue);font-weight:700;margin-right:8px}
+  details[open] summary::before{content:"－"}
+  details .ans{padding:0 15px 14px 30px;color:var(--ink-soft);font-size:14px;border-top:1px dashed var(--line);margin-top:4px;padding-top:10px}
+  .foot{text-align:center;color:var(--ink-mute);font-size:12px;margin:26px 0 10px}
+  .bar{height:6px;background:var(--blue-soft);border-radius:999px;overflow:hidden;margin:10px 0 18px}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--teal))}
+  /* 考核试卷 */
+  .exam-head{background:linear-gradient(120deg,#0f766e,#1d4ed8);color:#fff;border-radius:14px;padding:22px 26px;margin-bottom:8px}
+  .exam-head h3{margin:0 0 6px;color:#fff;font-size:20px}
+  .exam-head p{margin:2px 0;font-size:13px;color:rgba(255,255,255,.92)}
+  .exam-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0}
+  .btn{border:0;border-radius:9px;padding:9px 18px;font-size:14px;cursor:pointer;font-weight:600}
+  .btn.primary{background:var(--blue);color:#fff}
+  .btn.ghost{background:#eef2f7;color:var(--ink-soft)}
+  .btn:active{transform:translateY(1px)}
+  .score-box{display:none;border:1px solid var(--teal);background:var(--teal-soft);border-radius:10px;padding:12px 16px;margin:12px 0;font-size:14px;color:#064e3b}
+  .part-title{font-size:16px;font-weight:700;color:var(--blue);margin:22px 0 10px;padding-left:10px;border-left:4px solid var(--blue)}
+  .q{border:1px solid var(--line);border-radius:10px;padding:12px 15px;margin:10px 0;background:#fff}
+  .q.correct{border-color:#10b981;background:#f0fdf4}
+  .q.wrong{border-color:#ef4444;background:#fef2f2}
+  .q .qtitle{font-weight:600;margin:0 0 8px;font-size:14px}
+  .q label{display:block;font-size:13.5px;color:var(--ink-soft);padding:3px 0;cursor:pointer}
+  .q label:hover{color:var(--blue)}
+  .q input{margin-right:8px}
+  .qexplain{display:none;margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);font-size:13px;color:var(--ink-soft)}
+  .q.correct .qexplain,.q.wrong .qexplain{display:block}
+  .qexplain b{color:var(--teal)}
+  .q.wrong .qexplain b{color:var(--red)}
+  .short-ans{background:var(--blue-soft);border-radius:8px;padding:10px 13px;margin-top:8px;font-size:13.5px;color:#1e3a8a}
+  @media print{
+    body{background:#fff;font-size:12px}
+    aside{display:none}
+    .layout{display:block;padding:0}
+    section{break-inside:avoid;box-shadow:none;border-radius:0;padding:14px 0;margin-top:10px}
+    .hero{background:#1d4ed8 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    details .ans{display:block}
+  }
+  @media(max-width:900px){
+    .layout{display:block;padding:12px}
+    aside{position:static;width:auto;height:auto;margin-bottom:14px}
+    section{padding:20px 18px}
+    .hero{padding:24px 20px}
+    .hero h1{font-size:24px}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+  <h2>目录导航</h2>
+  <a href="#s0">0. 先看这里：怎么用</a>
+  <a href="#s1">1. GCP 一句话版</a>
+  <a href="#s2">2. 六大角色分工图</a>
+  <a href="#s3">3. 贯穿全篇的铁律</a>
+  <a href="#s4">4. 八章逐章通俗解读</a>
+  <a href="#s5">5. 必背数字速查</a>
+  <a href="#s6">6. 易混概念辨析</a>
+  <a href="#s7">7. 必备文件三阶段清单</a>
+  <a href="#s8">8. 记忆口诀与易错点</a>
+  <a href="#s9">9. 自测 25 题（含解析）</a>
+  <a href="#s11">10. 综合考核试卷（自动判分）</a>
+  <a href="#s10">11. 考前 10 分钟速览</a>
+</aside>
+<main>
+
+<div class="hero">
+  <span class="tag">校园招聘笔试 · 学习资料</span>
+  <h1>GCP 通俗学习资料</h1>
+  <p>把《药物临床试验质量管理规范》读成"人话"，一份资料覆盖：核心逻辑 + 八章要点 + 数字考点 + 概念辨析 + 自测题。</p>
+  <p>依据：《【比逊医疗】校园招聘笔试GCP学习资料.pdf》（《药物临床试验质量管理规范》修订稿 + 附件"临床试验保存文件"）</p>
+  <div class="meta">
+    <span>共 8 章 81 条</span><span>附件 3 阶段文件清单</span><span>适合考前 1–2 天冲刺</span>
+  </div>
+</div>
+
+<section id="s0">
+  <h2><span class="num">00</span>先看这里：怎么用这份资料</h2>
+  <div class="tip"><b>一句话备考策略：</b>先记住"受试者权益和安全高于一切"这条主线，再按"谁（角色）—做什么（职责）—留什么（文件）—报什么（安全性）"四条线去背，数字考点单独突击。</div>
+  <ol>
+    <li><b>第一遍（约 20 分钟）：</b>看第 1–3 节，建立整体框架。GCP 的所有条款都是围绕"保护人 + 保证数据可信"展开的。</li>
+    <li><b>第二遍（约 40 分钟）：</b>看第 4 节逐章解读，重点理解"大白话"一栏，不必逐字背原文。</li>
+    <li><b>第三遍（约 20 分钟）：</b>背第 5 节数字表 + 第 8 节口诀。</li>
+    <li><b>最后：</b>做第 9 节自测题，错题回查对应章节；考前翻第 10 节速览。</li>
+  </ol>
+  <div class="note">资料来源为"<b>修订稿</b>"，文中施行日期为空缺（原文写作"自 201 年 月 日起施行"）。笔试请以公司提供的这份资料口径作答；实际工作中应以现行有效法规为准。</div>
+</section>
+
+<section id="s1">
+  <h2><span class="num">01</span>GCP 一句话版</h2>
+  <p class="lead">GCP = Good Clinical Practice，药物临床试验质量管理规范。它是临床试验"全过程"的标准规定。</p>
+  <div class="cols">
+    <div class="card">
+      <div class="role">它管什么？</div>
+      <p>方案设计 → 组织实施 → 执行 → 监查 → 稽查 → 记录 → 分析 → 总结 → 报告。<b>从立项到归档，全程都管。</b></p>
+    </div>
+    <div class="card">
+      <div class="role teal">它为了什么？</div>
+      <p>① 让过程规范；② 让数据和结果<b>科学、真实、可靠</b>；③ <b>保护受试者的权益和安全</b>。</p>
+    </div>
+    <div class="card">
+      <div class="role amber">最高原则</div>
+      <p>遵循《赫尔辛基宣言》。<b>受试者的权益和安全是首要考虑，高于对科学和社会获益的考虑。</b></p>
+    </div>
+    <div class="card">
+      <div class="role red">两把保护伞</div>
+      <p><b>伦理委员会</b> + <b>知情同意书</b>，是保障受试者权益的主要措施。</p>
+    </div>
+  </div>
+  <h3>总则里的其他必考点（第 6–10 条）</h3>
+  <ul>
+    <li>试验开始前必须权衡风险与获益，<b>只有预期获益大于风险</b>才能开始或继续。</li>
+    <li>试验方案必须<b>清晰、详细、可操作</b>，且经伦理委员会批准后方可执行。</li>
+    <li>凡涉及<b>医学判断或临床决策，必须由临床医生</b>作出。</li>
+    <li>所有纸质/电子资料都要妥善记录、处理和保存，能用于报告、解释和核对。</li>
+    <li>试验药物制备符合 <b>GMP</b>；使用必须按批准的方案。</li>
+    <li>各方建立<b>质量保证体系</b>；遵守<b>利益冲突回避</b>原则。</li>
+  </ul>
+</section>
+
+<section id="s2">
+  <h2><span class="num">02</span>六大角色分工图（背这张就够）</h2>
+  <p class="lead">笔试常考"谁负责什么"。把角色和动词绑定记忆，就不容易串。</p>
+  <div class="cols">
+    <div class="card">
+      <div class="role">申办者 Sponsor</div>
+      <p><b>出题人 + 出钱人 + 最终责任人。</b></p>
+      <ul>
+        <li>发起、管理、提供经费</li>
+        <li>建质量体系、做风险管理</li>
+        <li>选研究者、签合同、买保险</li>
+        <li>提供试验药物和研究者手册</li>
+        <li>安全性评估、报告药监</li>
+        <li>派监查员、做稽查</li>
+        <li>委托 CRO 也<b>不能免责</b></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="role teal">研究者 Investigator</div>
+      <p><b>在临床一线干活的人。</b></p>
+      <ul>
+        <li>具备执业资格、培训与经验</li>
+        <li>按批准方案做试验</li>
+        <li>管受试者的医疗与知情同意</li>
+        <li>管试验用药品（可指定药师）</li>
+        <li>填 CRF、留原始记录</li>
+        <li>报 SAE、写总结、保存文件</li>
+        <li>主要研究者（PI）负责监管与授权分工</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="role amber">伦理委员会 IRB/IEC</div>
+      <p><b>独立的"把关人"。</b></p>
+      <ul>
+        <li>审查科学性 + 伦理性</li>
+        <li>保护受试者权益和安全</li>
+        <li>批方案、批知情同意书</li>
+        <li>跟踪审查至少一年一次</li>
+        <li>有权暂停或终止试验</li>
+        <li>组成至少 5 人，含非医学/非机构成员，男女都有</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="role">监查员 Monitor</div>
+      <p><b>申办者派去"盯现场"的人。</b></p>
+      <ul>
+        <li>申办者与研究者之间的主要联系人</li>
+        <li>核实资质、资源、知情同意、药品、数据</li>
+        <li>核对 CRF 与源文件</li>
+        <li>查偏离、促整改</li>
+        <li>每次访视后写书面监查报告</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="role red">稽查员 Auditor</div>
+      <p><b>独立"查体系"的人。</b></p>
+      <ul>
+        <li>由申办者选定，独立于试验及相关体系</li>
+        <li><b>不能由监查员兼任</b></li>
+        <li>系统、独立地核查试验行为与文件</li>
+        <li>评估对方案、SOP、GCP、法规的依从性</li>
+        <li>一般有资质证明、有稽查流程和报告</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="role teal">受试者 Subject</div>
+      <p><b>被保护的核心，不是"工具人"。</b></p>
+      <ul>
+        <li>自愿参加、书面知情同意</li>
+        <li>可<b>无理由随时退出</b>，不受歧视或报复</li>
+        <li>医疗待遇与权益不受影响</li>
+        <li>发生试验相关损害可获补偿/治疗</li>
+        <li>个人信息保密，报告用识别编码</li>
+        <li>弱势受试者需特别关注</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note"><b>还有两个常客：</b>① <b>CRO</b>（合同研究组织）：受托干活的外部机构，活可以外包，责任不能外包；② <b>IDMC</b>（独立数据监察委员会）：申办者设立的独立小组，定期看进展、安全性和有效性数据，建议"继续 / 修改 / 停止"试验。</div>
+</section>
+
+<section id="s3">
+  <h2><span class="num">03</span>贯穿全篇的六条铁律</h2>
+  <div class="chapter">
+    <h3>铁律 1：先伦理，后筛选；先批准，后用药</h3>
+    <div class="plain">研究者未拿到伦理委员会<b>书面批准</b>前，不能筛选受试者；申办者在获得伦理委员会和药品监督管理部门批准前，不得向研究者提供试验用药品。</div>
+  </div>
+  <div class="chapter">
+    <h3>铁律 2：方案不能随便改，紧急情况先救人</h3>
+    <div class="plain">未经申办者同意 + 伦理委员会批准，不得擅自修改或违背方案。<b>例外</b>：为及时减少受试者的紧急危害；或仅涉及管理方面的改动（如更换监查员、电话号码）。紧急偏离要向伦理委员会、申办者报告并说明理由，必要时报药监。</div>
+  </div>
+  <div class="chapter">
+    <h3>铁律 3：数据要"原始、同步、准确、完整、可溯源"</h3>
+    <div class="plain">源数据来自源文件和试验记录；修改必须<b>留痕</b>，不能掩盖初始数据，必要时解释理由。CRF 数据与源文件要一致，不一致要解释；修改要签名、注明日期、说明原因。</div>
+  </div>
+  <div class="chapter">
+    <h3>铁律 4：知情同意是"过程"，不是"签字"</h3>
+    <div class="plain">要用通俗易懂的语言，给足时间和机会提问；不能强迫、利诱；不能含有让受试者放弃合法权益或为研究方免责的语言；受试者拿到签署后的副本；有新信息要重新告知，必要时再次签署。</div>
+  </div>
+  <div class="chapter">
+    <h3>铁律 5：安全性信息必须快报、规范报</h3>
+    <div class="plain">SAE 除方案/手册规定无需立即报告的以外，<b>立即报申办者</b>，随后补详尽书面报告；报告用<b>唯一识别编码</b>，不用真实姓名、身份证号、住址；研究者还要向伦理委员会报告。SUSAR 死亡/危及生命 <b>7 天</b>，其他 <b>15 天</b>报药监和卫生行政部门。</div>
+  </div>
+  <div class="chapter">
+    <h3>铁律 6：做过的事要留文件，留够年限</h3>
+    <div class="plain">必备文件分<b>准备、进行、完成</b>三阶段归档；保存至试验药物批准上市后 <b>2 年</b>，或临床试验终止后 <b>5 年</b>；伦理委员会记录保存至试验结束后 <b>5 年</b>。保存条件要避光、防水、便于长期保存和查阅。</div>
+  </div>
+</section>
+
+<section id="s4">
+  <h2><span class="num">04</span>八章逐章通俗解读</h2>
+  <p class="lead">每章按"这一章在讲什么 → 大白话 → 关键词"整理。原文条款号保留，方便回查。</p>
+
+  <h3>第一章 总则（第 1–10 条）：定调子</h3>
+  <div class="chapter">
+    <h3>第 1–10 条</h3>
+    <div class="plain">讲清楚 GCP 是什么、为谁服务、按什么原则做事。核心：受试者权益和安全优先；获益要大于风险；方案要经伦理批准；医生做医学决策；资料要能追溯；药物制备符合 GMP；各方建质量保证体系并回避利益冲突。</div>
+    <p class="key"><b>关键词：</b><span class="chip">赫尔辛基宣言</span><span class="chip">权益与安全优先</span><span class="chip">获益 &gt; 风险</span><span class="chip">GMP</span><span class="chip">质量保证体系</span><span class="chip">利益冲突回避</span></p>
+  </div>
+
+  <h3>第二章 伦理委员会（第 11–14 条）：把关人</h3>
+  <div class="chapter">
+    <h3>第 11 条 职责</h3>
+    <div class="plain">保护受试者权益和安全，审查科学性、伦理性，特别关注弱势受试者。审查文件包括：方案及修正案、知情同意书及更新件、招募方式与信息、给受试者的书面资料、研究者手册、现有安全性资料、补偿信息文件、研究者最新履历/资质、其他所需文件。</div>
+    <p class="key"><b>审查意见四种：</b>批准；必要的修正后批准（写明修正内容）；不批准（写明理由）；终止或暂停（写明理由）。意见要书面，写明试验名称、文件版本号和日期。</p>
+    <p class="key"><b>还要盯：</b>重要偏离（增加风险或显著影响实施）、所有严重和非预期药物不良事件、可能影响安全的新信息；有权暂停或终止；跟踪审查根据风险定频度，<b>至少一年一次</b>；受理受试者投诉。</p>
+  </div>
+  <div class="chapter">
+    <h3>第 12–14 条 组成、程序、记录</h3>
+    <div class="plain">至少 5 人：医药相关专业、非科学背景、非本机构成员，且有不同性别；成员有伦理审查培训和经验。投票成员必须独立于被审查项目；可请外部专家参与但<b>不投票</b>。要有制度与 SOP（组成、备案、会议安排、会议审查、初始与跟踪审查、轻微变更快速审查、意见通知、申诉受理）。审查记录保存至<b>试验结束后 5 年</b>。</div>
+    <p class="key"><span class="chip">≥5 人</span><span class="chip">不同性别</span><span class="chip">独立于项目</span><span class="chip">专家不投票</span><span class="chip">SOP</span><span class="chip">记录保存 5 年</span></p>
+  </div>
+
+  <h3>第三章 研究者（第 15–28 条）：一线执行者</h3>
+  <div class="chapter">
+    <h3>第 15–16 条 资格与资源</h3>
+    <div class="plain">要有执业资格、专业知识/培训/经验、最新履历；熟悉方案、研究者手册、药物资料和法规；接受监查、稽查和检查；保存由主要研究者签署的<b>研究者分工授权表</b>。要能在合同期限内入组足够受试者、按时完成试验、支配人员与设施；确保所有参与人员了解方案和职责，PI 负责监管与质量管理。</div>
+  </div>
+  <div class="chapter">
+    <h3>第 17–19 条 受试者医疗、伦理沟通、遵守方案</h3>
+    <div class="plain">授权临床医生做所有医学决策；对不良事件和有临床意义的实验室异常要妥善处理并如实告知；受试者可无理由退出。试验开始前须获伦理书面批准才能筛选；提交文件及更新版本。按批准方案执行；偏离要记录和解释；要控制合并用药（病历注明、系统限制/提醒、告知受试者外就诊时主动说明）。</div>
+    <p class="key"><b>例外要背：</b>为及时减少受试者紧急危害，或仅管理性改动（换监查员、电话号码等），可先偏离；之后及时报伦理、申办者并说明理由，必要时报药监。</p>
+  </div>
+  <div class="chapter">
+    <h3>第 20–21 条 试验用药品、随机化与揭盲</h3>
+    <div class="plain">PI 和医疗机构负责现场药品管理，可指派药师或其他合格人员。接收、储存、分发、回收、退还、未使用处置都要留记录：<b>日期、数量、批号/序列号、有效期、分配编码、签名</b>；保存每位受试者用量和剂量记录；数量要与申办者提供的一致。按批准方案使用并告知用法。盲法按方案揭盲；因 SAE 紧急揭盲要向申办者<b>书面说明原因</b>。</div>
+  </div>
+  <div class="chapter">
+    <h3>第 22–23 条 知情同意（高频考点）</h3>
+    <div class="plain">研究者要遵守法规、GCP 和赫尔辛基原则；伦理批准后才能开始。<b>有新信息</b>要书面告知，经伦理批准后受试者<b>再次签署</b>，新入选者签更新版。资料要通俗易懂，给足时间答疑，不得强迫利诱，不得含放弃权益/免责语言。受试者或其法定代理人 + 执行知情同意的研究者分别<b>签名并注明日期</b>。受试者无阅读能力时须有<b>公正的见证人</b>，见证人也要签字注明日期。无能力表达同意者由法定代理人代表，并尽可能让受试者本人理解、亲自签署；非治疗性试验且无预期临床获益时，受试者本人必须签字注明日期。紧急情况无法事先取得同意时，需法定代理人同意；代理人也不在场时，入选方式须在方案中写明并经伦理书面批准，同时尽快补取同意。</div>
+    <p class="key"><b>知情同意书 20 项内容（记关键词）：</b>研究性、目的、随机分组可能性、试验步骤（含有创操作）、受试者责任、试验性内容、风险与不便（尤其胚胎/胎儿/哺乳）、预期获益及不能获益的可能、其他可选治疗及获益风险、损害补偿/治疗、参加补偿、预期花费、自愿与随时退出、相关方查阅原始记录、保密、新信息告知、问题联系人及方式、可能被终止的情况/理由、预期持续时间、预计受试者人数。</p>
+    <div class="danger"><b>非治疗性试验由法定代理人同意的四条件：</b>① 只能在无知情同意能力的受试者中进行；② 受试者确实无同意能力；③ 预期风险低；④ 对健康的负面影响已减至最低且法律不禁止；且入选已经伦理审查批准。另：除非例外，非治疗性试验一般只能在患有试验药物适用疾病/状况的患者中进行；出现过度痛苦或不适应让其退出。</div>
+  </div>
+  <div class="chapter">
+    <h3>第 24–28 条 记录报告、安全性、终止暂停、进展与总结</h3>
+    <div class="plain">
+      <b>第 24 条：</b>PI 监督数据采集；数据准确、完整、可读、及时；源数据可溯源、清晰、同步、原始、准确、完整，修正留痕；CRF 与源文件一致，修改签名注明日期；文件保存至上市后 2 年或终止后 5 年。<br>
+      <b>第 25 条：</b>SAE 立即报申办者（方案/手册规定无需立即报告的除外），随后书面详报；用唯一识别编码；向伦理报告；死亡事件提供尸检报告和最终医学报告等。<br>
+      <b>第 26 条：</b>提前终止/暂停要通知受试者并给予适当治疗和随访，按规定报药监；研究者、申办者、伦理各自终止/暂停时，要按路径向机构、申办者、伦理书面报告。<br>
+      <b>第 27–28 条：</b>向伦理提交年度报告或进展报告；机构或风险变化时尽快书面报申办者和伦理；试验完成后向机构报告、向伦理提供结果摘要、向申办者提供药监所需报告。
+    </div>
+  </div>
+
+  <h3>第四章 申办者（第 29–54 条）：总操盘手</h3>
+  <div class="chapter">
+    <h3>第 29–31 条 质量管理、风险管理、QA/QC</h3>
+    <div class="plain">申办者把<b>保护受试者权益安全、保证结果真实可靠</b>作为基本出发点，建立覆盖设计—实施—记录—评估—报告—归档的质量管理体系。识别关键环节和数据的风险，从<b>系统层面</b>（设施设备、SOP、计算机化系统、人员、供应商）和<b>试验层面</b>（药物、设计、数据收集记录）考虑；风险评估看差错可能性、对权益安全/数据可靠性的影响、被监测程度。预先设定质量容忍度，超出时要评估是否采取进一步措施；质量活动要有记录、定期评估有效性、在试验报告中说明。QA/QC 方面要有 SOP，数据处理每一步都质控；流程不宜复杂，文件要清晰简洁一致。</div>
+  </div>
+  <div class="chapter">
+    <h3>第 32–35 条 CRO、专家、设计、数据与记录</h3>
+    <div class="plain">
+      <b>CRO：</b>可委托部分或全部工作，但申办者仍是数据质量和可靠性的<b>最终责任人</b>；委托要签合同，转包需书面批准；未明确委托的工作仍由申办者负责。<br>
+      <b>数据系统：</b>电子系统须经验证，有完整 SOP、培训、权限名单、备份、安全控制；数据修改预先规定、完整记录、保留稽查轨迹和编辑轨迹；数据转换要一致且过程可见；盲法试验在整个录入处理过程中保持盲态；用<b>受试者识别编码</b>保证可溯源。<br>
+      <b>IDMC：</b>可设立独立数据监察委员会，定期评价进展、安全性数据和有效性终点，建议继续/修改/停止；有书面 SOP 和会议记录。<br>
+      <b>保存：</b>申办者必备文件保留至上市后至少 2 年，或正式停止/暂停后至少 5 年；书面告知研究者保存要求及不再需要时的处理。
+    </div>
+  </div>
+  <div class="chapter">
+    <h3>第 36–42 条 选人、签合同、批件、药物信息</h3>
+    <div class="plain">选择有资质、有经验、有资源的研究者和机构；多中心要选主要研究者/组长单位。涉及医学判断的样本测定实验室要符合规定，标本管理检测运输储存按 GLP 执行；<b>禁止做与伦理批准方案无关的生物样本检测（如基因）</b>；剩余标本继续保存/未来使用要受试者签署知情同意，说明保存时间、保密和共享情形。提供方案和最新手册并给足审议时间，实施前签合同。合同要明确责任权利利益、经费合理、避免利益冲突、遵守 GCP、执行批准方案、同意监查稽查检查、文件保存期限、文章发表等。要提供保险或担保（不含机构自身过失造成的损害），承担试验相关损害/死亡的诊疗费用和补偿并及时兑付。试验开始前要取得药监许可或完成备案，文件注明版本号和日期。获伦理批准后方可试验；"必要修正后批准"要改完递交，"不批准"要修改后重新审查。要有充分非临床/临床数据支持试验；重要新信息及时更新研究者手册；剂型显著改变要评估对药代动力学的影响。</div>
+  </div>
+  <div class="chapter">
+    <h3>第 43–47 条 试验用药、查阅、安全性报告</h3>
+    <div class="plain">
+      <b>药品：</b>包装/说明标明是否上市、符合 GMP、编码标签保持盲法；明确储存温度、储运条件、时限、配制方法和输注装置并告知相关人员；包装防污染变质；盲法编码系统含紧急揭盲程序。伦理和药监批准前<b>不得提供药品</b>。要有供给管理规程，保存运输、接收、分发、回收和销毁记录，建立召回、回收、过期回收和销毁制度，所有过程书面记录；确保稳定性、数量充足，新增批次留稳定性/分析记录。<br>
+      <b>留样：</b>留存样品在稳定时限内，保存至数据分析结束或法规要求时限，<b>取较长者</b>；生物等效性/人体生物利用度试验要留样，与试验药品同批，数量满足<b>五次全检</b>，医疗机构保存至上市后至少 2 年；无保存条件可委托第三方，但不得返还申办者或其利益相关方。<br>
+      <b>安全性：</b>申办者负责安全性评估；影响受试者安全、试验实施或伦理批准意见的问题及时通告；严重和非预期不良事件及时报告所有研究者/机构/伦理；<b>SUSAR 报药监和卫生行政部门：死亡、危及生命 7 天；其他 15 天</b>；按要求提交最新安全信息和阶段性报告。
+    </div>
+  </div>
+  <div class="chapter">
+    <h3>第 48–54 条 监查、稽查、依从性、提前终止、报告、多中心</h3>
+    <div class="plain">
+      <b>监查：</b>目的是保护权益、数据准确完整、遵守方案和法规。申办者指派有资质监查员，制定监查计划（强调权益、数据真实、风险，说明策略/职责/方法/原因，突出关键数据和流程）和 SOP。监查范围取决于目标、设计、复杂性、盲法、样本量、终点等；通常在试验前、中、后进行；采用基于风险、有优先顺序的方法；<b>现场监查 + 中心化监查结合</b>，中心化监查是补充。<br>
+      <b>监查员职责：</b>熟悉药物/方案/ICF/SOP/法规；确认研究者资质与资源；核实药品保存供应、使用情况；核实受试者签署 ICF、人员了解试验；核对 CRF 与源文件（剂量改变、治疗变更、AE、合并用药、间发疾病、失访、检查遗漏等）；纠正 CRF 错误要由研究者或授权人员操作并签名日期；确认 AE 按时报告、必备文件保存；发现偏离及时沟通防再发；<b>每次访视后书面报告</b>。<br>
+      <b>稽查：</b>是质量保证的一部分，不同于常规监查和职能部门质控；稽查员独立于试验和体系，不能由监查员兼任；有流程、计划、记录和报告；一般不要求向药监提供常规稽查报告，但严重违背 GCP 或诉讼期间可被要求；应提供稽查证明。<br>
+      <b>依从性：</b>发现不遵守立即纠正；重要问题找根源、采取纠正预防措施；严重或劝阻不改的，终止该研究者/机构继续参加并书面报告药监。<br>
+      <b>提前终止/暂停：</b>立即告知研究者/机构/药监并说明理由，同时告知伦理。<br>
+      <b>多中心：</b>与各中心签合同；同一方案、统一临床和实验室评价标准、CRF 填写指导；各中心使用相同 CRF，额外数据提供附加 CRF；试验前书面明确职责；确保中心间沟通。
+    </div>
+  </div>
+
+  <h3>第五章 试验方案（第 55–71 条）：试验的"施工图"</h3>
+  <div class="chapter">
+    <h3>第 55–71 条 一张清单背完</h3>
+    <p class="key"><b>55 基本信息：</b>标题/编号/日期（修改标版本号和日期）、申办者名称地址、授权签署人、医学专家、主要研究者、参与实验室等。</p>
+    <p class="key"><b>56 研究背景：</b>药物名称介绍、非临床/临床相关发现、对受试人群的潜在风险获益、给药途径剂量方法时程及理由、强调按方案/GCP/法规、目标人群、背景资料与参考文献。</p>
+    <p class="key"><b>57 试验目的：</b>详细描述。</p>
+    <p class="key"><b>58 试验设计：</b>主要/次要终点；对照组理由和设计（双盲、安慰剂对照、平行组等）+ 流程图；控制偏倚措施（随机化、双盲、盲底保存、紧急揭盲；单盲/开放要说明理由）；治疗方法、剂量、给药方案、剂型包装标签；预期时长与随访安排；暂停/终止标准；试验用药品管理流程；明确哪些数据可直接记入 CRF 作为源数据。</p>
+    <p class="key"><b>59 检查：</b>临床和实验室检查项目、方法、仪器、质控要求。</p>
+    <p class="key"><b>60 受试者选择退出：</b>入选标准、排除标准、退出标准（停用药品/终止试验）；退出者数据采集内容时限、替换与随访。</p>
+    <p class="key"><b>61 治疗：</b>各组（含亚组）所有药物名称、剂量、方案、途径、时程（含随访期）；允许/禁止的合并用药与急救治疗；依从性监查程序。</p>
+    <p class="key"><b>62 访视随访：</b>试验期间、终点、AE 评估、结束后随访和医疗措施。</p>
+    <p class="key"><b>63–64 评价：</b>有效性和安全性指标及其评价、记录、分析方法与时点；AE 和伴随疾病记录报告程序；AE 随访方式和时间。</p>
+    <p class="key"><b>65 统计：</b>样本量及理由；检验水准及调整；原假设/备择假设、方法与软件、期中分析理由与规程；缺失/未用/不合逻辑数据处理；偏离统计计划的修改程序；分析数据集定义（随机化、服用过、符合入选、可评价）。</p>
+    <p class="key"><b>66–71 其他：</b>源数据/源文件直接查阅；质量控制与质量保证；伦理学考虑；数据管理和记录保存；财务和保险；其他。</p>
+  </div>
+
+  <h3>第六章 研究者手册（第 72–76 条）：药物的"说明书 Pro 版"</h3>
+  <div class="chapter">
+    <h3>第 72–76 条</h3>
+    <div class="plain">研究者手册是申办者提供的、试验药物人体研究相关的药学/非临床/临床资料汇编，帮助研究者和参与人员理解并遵守方案，特别是剂量、给药次数/间隔/方案/方法、主要和次要疗效指标、安全性观察与监查。申办者<b>至少每年审阅修订一次</b>，有新信息及时更新、送达研究者，研究者递交伦理；已上市药品用于已熟悉用途可简化，甚至用说明书替代部分内容，但新用途（如新适应证）要编写相关手册。</div>
+    <p class="key"><b>扉页必须有：</b>申办者名称；药物标识（研究编号、化学名/通用名、批准的合法商品名）；版本号和发布日期；替换版本号和日期。若保密需声明仅供研究者和伦理使用。</p>
+    <p class="key"><b>内容 16 项（记骨架）：</b>目录、保密声明与签字页、摘要、前言、理化药学特性与结构式、非临床研究、非临床药理、动物药代与代谢、毒理（单剂量/重复给药/致癌/特殊毒理/生殖/遗传毒性）、人体内作用、人体药代与代谢、安全性和有效性（汇总 ADR、讨论亚组差异）、上市销售情况、数据概要与研究者指南、手册小结（风险/不良反应/特殊检查观察/过量处理）、参考资料与报告要求。</p>
+  </div>
+
+  <h3>第七章 必备文件管理（第 77–80 条）：做过要留痕</h3>
+  <div class="chapter">
+    <h3>第 77–80 条</h3>
+    <div class="plain">必备文件是用于评价试验实施、证明各方遵守 GCP 和法规的文件，是申办者独立稽查、药监检查的主要内容，也是确认试验真实性和数据完整性的依据。保存场所和条件要避光、防水、利于长期保存，建立规章制度和 SOP，文件要易识别、查找、调阅、归位；未列入目录但实际产生的文件也要归档。研究者保留已递交申办者的 CRF 数据；用作源文件的复印件必须满足<b>核证副本</b>要求。文件按<b>准备 / 进行 / 完成</b>三阶段归类，并说明每份文件的目的和保管方（研究者/机构、申办者或双方）。试验开始双方办公室都要建档案，<b>结束时监查员必须审核确认</b>各自必备文件齐全。</div>
+  </div>
+
+  <h3>第八章 附则（第 81 条）：术语词典</h3>
+  <div class="chapter">
+    <h3>第 81 条 常考定义速记</h3>
+    <p class="key"><b>弱势受试者：</b>丧失或缺乏维护自身权利和利益、自愿参加试验能力者；包括无药可救/危急病人、福利院居住者、失业者或穷人、少数民族、无家可归者、流浪者、难民、囚犯、孕妇和胎儿、未成年者、无能力知情同意者（精神病患者或智力低下者）等。</p>
+    <p class="key"><b>主要研究者 PI：</b>各中心/试验现场负责人；<b>次要研究者：</b>在 PI 授权监督下履行重要程序或作重大决定。</p>
+    <p class="key"><b>知情同意：</b>告知情况后受试者自愿确认同意参加的<b>过程</b>，以书面、签名、注明日期的知情同意书为证明。</p>
+    <p class="key"><b>法定代理人：</b>依法被授权代表受试者同意参加试验、监督保护其人身权益的个人；<b>公正的见证人：</b>与试验无关、帮助无阅读能力者参与知情同意过程的人。</p>
+    <p class="key"><b>安慰剂：</b>无药效、无毒副作用（如葡萄糖、淀粉），外观、大小、颜色、剂型、重量、味道、气味尽可能与试验药物相同，但不含有效成分。</p>
+    <p class="key"><b>试验用药品：</b>试验药物、对照药物和安慰剂；<b>对照药物：</b>研究药物、已上市药品、安慰剂。</p>
+    <p class="key"><b>核证副本：</b>有研究者签名和记录日期的纸质或电子原始记录复印件，可认定为有效记录。</p>
+    <p class="key"><b>电子数据稽查轨迹：</b>系统自动生成的带时间烙印的电子记录，能独立追溯谁在何时修改/删除了哪条数据及原因；任何改变都不会掩盖过去的记录。</p>
+    <p class="key"><b>计算机化系统验证：</b>用文件化证据证明系统符合技术规范、设计要求和用户需求，确保全生命周期处于受控状态。</p>
+  </div>
+</section>
+
+<section id="s5">
+  <h2><span class="num">05</span>必背数字速查（考前 5 分钟）</h2>
+  <div class="grid-num">
+    <div class="card"><div class="big">≥ 5 人</div><small>伦理委员会组成人数</small></div>
+    <div class="card"><div class="big">≥ 1 次/年</div><small>伦理跟踪审查最低频度</small></div>
+    <div class="card"><div class="big">5 年</div><small>伦理审查记录保存</small></div>
+    <div class="card"><div class="big">2 年 / 5 年</div><small>必备文件：上市后 / 终止后</small></div>
+    <div class="card"><div class="big">7 天 / 15 天</div><small>SUSAR：死亡或危及生命 / 其他</small></div>
+    <div class="card"><div class="big">≥ 1 次/年</div><small>研究者手册审阅修订</small></div>
+    <div class="card"><div class="big">5 次全检</div><small>生物等效性试验留样数量</small></div>
+    <div class="card"><div class="big">20 项</div><small>知情同意书必须包含的内容</small></div>
+  </div>
+  <table>
+    <thead><tr><th>数字</th><th>对应考点</th><th>易错提醒</th></tr></thead>
+    <tbody>
+      <tr><td class="num">至少 5 人</td><td>伦理委员会组成：医药相关、非科学背景、非本机构成员、不同性别</td><td>不是"至少 5 名医生"，必须有多背景</td></tr>
+      <tr><td class="num">至少一年一次</td><td>伦理委员会对正在进行的试验跟踪审查</td><td>频度按风险定，但这是下限</td></tr>
+      <tr><td class="num">试验结束后 5 年</td><td>伦理委员会审查记录保存</td><td>起算点是"试验结束后"</td></tr>
+      <tr><td class="num">上市后 2 年 / 终止后 5 年</td><td>研究者、申办者必备文件保存</td><td>两个条件；合同还要明确费用与到期处理</td></tr>
+      <tr><td class="num">7 天 / 15 天</td><td>SUSAR 报告药监与卫生行政部门：死亡、危及生命 7 天；其他 15 天</td><td>是"非预期的严重药物不良反应"，不是所有 SAE</td></tr>
+      <tr><td class="num">至少每年一次</td><td>研究者手册审阅和修订</td><td>有新安全/有效性信息时可更频繁，并先告知研究者</td></tr>
+      <tr><td class="num">5 次</td><td>生物等效性/生物利用度试验留存样品数量满足按质量标准全检五次</td><td>留样与试验药品同批次</td></tr>
+      <tr><td class="num">2 年</td><td>生物等效性留样由医疗机构保存至药品上市后至少 2 年</td><td>无保存条件可委托第三方，但不能还给申办者</td></tr>
+      <tr><td class="num">20 项</td><td>知情同意书和其他文字资料须包括的内容</td><td>重点记"自愿退出、补偿、保密、新信息、联系人"等</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s6">
+  <h2><span class="num">06</span>易混概念辨析（选择题最爱挖坑）</h2>
+  <h3>1. AE / SAE / ADR / SUSAR</h3>
+  <table>
+    <thead><tr><th>概念</th><th>关键判据</th><th>记忆点</th></tr></thead>
+    <tbody>
+      <tr><td><b>AE 不良事件</b></td><td>受试者接受试验用药品后出现的<b>所有不良医学事件</b>：症状、体征、疾病或实验室异常</td><td><b>不要求有因果关系</b></td></tr>
+      <tr><td><b>SAE 严重不良事件</b></td><td>导致死亡；危及生命；需住院或延长住院；永久或严重残疾/功能丧失；先天性异常/出生缺陷</td><td><b>看后果严重程度，也不看因果</b></td></tr>
+      <tr><td><b>ADR 药物不良反应</b></td><td>试验药物与不良反应之间<b>至少有一个合理的可能性</b>，不能排除相关性；未上市药物剂量相关且有害的非预期反应也算</td><td><b>要有因果可能性</b></td></tr>
+      <tr><td><b>非预期 ADR</b></td><td>临床表现和严重程度<b>超出</b>现有资料：研究者手册、说明书、药品性能摘要等</td><td>"资料里没写过"</td></tr>
+      <tr><td><b>SUSAR</b></td><td>非预期的、严重的药物不良反应；死亡/危及生命 7 天，其他 15 天报药监和卫生行政部门</td><td><b>非预期 + 严重 + 有因果可能性</b></td></tr>
+    </tbody>
+  </table>
+  <h3>2. 监查 / 稽查 / 检查</h3>
+  <table>
+    <thead><tr><th>概念</th><th>谁做</th><th>做什么</th></tr></thead>
+    <tbody>
+      <tr><td>监查 Monitoring</td><td>申办者指派的监查员</td><td>盯试验进展和过程，保证按方案、SOP、GCP、法规实施、记录和报告；申办者与研究者之间的主要联系人</td></tr>
+      <tr><td>稽查 Audit</td><td>申办者选定的独立稽查员</td><td>系统、独立地核查试验行为和相关文件，判断实施与记录的依从性；<b>不能由监查员兼任</b></td></tr>
+      <tr><td>检查 Inspection</td><td>药品监督管理部门</td><td>官方审阅文件、设备、记录等，可在试验单位、申办者或 CRO 所在地进行</td></tr>
+    </tbody>
+  </table>
+  <h3>3. 源数据 / 源文件 / CRF / 核证副本</h3>
+  <ul>
+    <li><b>源文件：</b>临床试验中产生的原始医学记录、医疗文件和数据（病历、影像、实验室记录、备忘录、日记、发药记录、仪器自动记录、X 光片、药房处方等），可纸质或电子。</li>
+    <li><b>源数据：</b>原始记录或其核证副本上记载的所有信息，包括临床发现、观察结果和重建/评价试验所需的其他记录。</li>
+    <li><b>CRF：</b>按方案设计、用于记录每名受试者试验全过程信息的印刷/光学/电子文件，向申办者报告。</li>
+    <li><b>核证副本：</b>有研究者签名和日期的复印件，可认定为有效记录。</li>
+  </ul>
+  <h3>4. 知情同意 vs 知情同意书</h3>
+  <p>知情同意是<b>过程</b>（充分告知 + 给足时间 + 答疑 + 自愿决定 + 签名注明日期）；知情同意书是这个过程的<b>书面证明</b>。过程到位不等于只签一张纸。</p>
+  <h3>5. QA / QC / 质量保证体系</h3>
+  <p><b>QA 质量保证：</b>建立系统的实施质量保障计划措施，保证遵守方案、GCP 和法规（管体系、管预防）。<b>QC 质量控制：</b>在质量保证系统中完成技术工作与数据处理，并执行确保质量的措施（管执行、管检查）。</p>
+  <h3>6. 伦理委员会意见四种</h3>
+  <p>批准 / 必要的修正后批准 / 不批准 / 终止或暂停。注意后三种都要写明理由或修正内容，而且"必要的修正后批准"改完要重新递交伦理。</p>
+</section>
+
+<section id="s7">
+  <h2><span class="num">07</span>必备文件三阶段清单（附件通俗版）</h2>
+  <p class="lead">原附件是一张目的 + 归档方（研究者/机构、申办者）的表格。这里按用途归并，备考记住"分三阶段、每份文件写目的、谁保管、留到年限"即可。</p>
+  <h3>一、准备阶段：证明"能开工"</h3>
+  <table>
+    <thead><tr><th>类别</th><th>典型文件</th><th>证明什么</th></tr></thead>
+    <tbody>
+      <tr><td>科学/药物依据</td><td>研究者手册；试验用药品说明书与标签（拟定）</td><td>最新科研结果和可能损害信息已提供给研究者；标签符合规定</td></tr>
+      <tr><td>方案与工具</td><td>已签字方案、修正案、CRF 样本；给受试者的信息样本（知情同意书及译文、其他书面资料、招募广告）</td><td>各方同意方案和工具；书面信息恰当；招募方式正当</td></tr>
+      <tr><td>合同与钱</td><td>财务合同；受试者保险文件（如有）；各方研究合同（与申办者/CRO/管理部门等）</td><td>经费与保险安排明确、合同已签</td></tr>
+      <tr><td>资质与检测</td><td>医学/实验室/专业技术操作的参考值范围；资质证书、认证证书、质控/外质评或其他验证体系；研究者及次要研究者履历和资格证明</td><td>设施能力与检测可靠性达标；研究者有资质</td></tr>
+      <tr><td>批件</td><td>伦理委员会书面审查批准文件（签名、日期，含方案、CRF、ICF、招募广告、补偿等）；伦理委员会人员组成；药监批准/备案</td><td>开工前已获伦理批准和药监许可/备案</td></tr>
+    </tbody>
+  </table>
+  <h3>二、进行阶段：证明"做得规范、一直在管"</h3>
+  <table>
+    <thead><tr><th>类别</th><th>典型文件</th><th>证明什么</th></tr></thead>
+    <tbody>
+      <tr><td>文件更新</td><td>更新的研究者手册；方案/CRF/ICF/其他书面资料/招募广告的更改；更新的资质证明、参考值范围</td><td>新信息及时反馈；生效版本可追溯</td></tr>
+      <tr><td>药品与随机</td><td>药品及相关材料说明、运送记录、药检报告、新批号药检证明、揭盲规程、总随机表</td><td>储存包装分发处置妥当；运送批号和方式可追踪；盲法与随机方法可靠</td></tr>
+      <tr><td>监查与考察</td><td>申办者考察报告、试验启动监查报告、监查访视报告</td><td>机构适合试验；团队评估过流程；监查结果有记录</td></tr>
+      <tr><td>再批准</td><td>伦理对方案修改和文件修订的书面批准（签名日期）；药监对修改的批准/认可/备案；更新履历资质</td><td>修改后的文件经过批准，版本号和日期明确</td></tr>
+      <tr><td>安全性/沟通</td><td>申办者通报的安全性资料、中期/年度报告；往来信件、会议记录、电话记录</td><td>安全性信息传达到位；重要问题讨论有据</td></tr>
+      <tr><td>受试者数据</td><td>筛选表、识别编码表、签署的知情同意书、原始医疗文件、完整并签署的 CRF、CRF 修正记录</td><td>入组顺序与身份可追溯；知情同意合规；数据真实完整；修改有轨迹</td></tr>
+      <tr><td>不良事件</td><td>研究者报申办者的 SAE；申办者/研究者向药监、伦理提交的 SUSAR 及安全性资料</td><td>按规定时限和路径报告</td></tr>
+    </tbody>
+  </table>
+  <h3>三、完成阶段：证明"收尾干净、结果可查"</h3>
+  <table>
+    <thead><tr><th>类别</th><th>典型文件</th><th>证明什么</th></tr></thead>
+    <tbody>
+      <tr><td>药品收尾</td><td>试验用药品在医疗机构登记表；销毁证明（研究者/机构或申办者销毁）</td><td>最终计数清楚：发出、回收、返还；未使用药品合规处置</td></tr>
+      <tr><td>人员与样本</td><td>受试者入选表；研究者职责分工及签名页；体液/组织样本留存记录（如有）</td><td>入组按时间顺序；职责授权与签名样张齐全；样本位置与标识可查</td></tr>
+      <tr><td>盲法与稽查</td><td>完成试验的受试者识别编码表；稽查证明（如需要）；试验分组和揭盲证明</td><td>编码表保密留存；揭盲证明返还申办者</td></tr>
+      <tr><td>总结报告</td><td>试验结束监查报告；研究者向伦理/药监提交的完成报告；临床试验总结报告</td><td>工作完成、文件归档妥当；结果与解释有据</td></tr>
+    </tbody>
+  </table>
+  <div class="note">考试中若问具体某一项文件"归谁保管"，原附件用 X 标注在"研究者/研究机构""申办者"两列，个别项写"必要时"或"若可行应有第三方"。备考优先记<b>三阶段划分 + 文件目的</b>，具体归档方以原表为准。</div>
+</section>
+
+<section id="s8">
+  <h2><span class="num">08</span>记忆口诀与易错点</h2>
+  <h3>五句口诀</h3>
+  <ol>
+    <li><b>"人大于科"</b>——受试者权益和安全高于科学和社会获益。</li>
+    <li><b>"两把伞"</b>——伦理委员会 + 知情同意书。</li>
+    <li><b>"先批后筛，先批后药"</b>——伦理书面批准才能筛选；伦理和药监批准后才能给药。</li>
+    <li><b>"改方案：两方同意；救急人：先做后报"</b>——申办者同意 + 伦理批准；紧急危害可先偏离再补报。</li>
+    <li><b>"AE 看有无，SAE 看后果，ADR 看关系，SUSAR 看新不新"</b>——四类安全性概念一次分清。</li>
+  </ol>
+  <h3>高频易错点</h3>
+  <table>
+    <thead><tr><th>易错说法</th><th>正确理解</th></tr></thead>
+    <tbody>
+      <tr><td>"知情同意书签了就行"</td><td>知情同意是过程；要通俗易懂、给足时间、答疑、自愿、签名日期、给副本，更新时还要重签</td></tr>
+      <tr><td>"受试者退出要申办者批准"</td><td>受试者可<b>无理由随时退出</b>，不受歧视或报复，医疗待遇与权益不受影响</td></tr>
+      <tr><td>"SAE 都要 7 天/15 天报药监"</td><td>7/15 天针对<b>非预期的严重药物不良反应（SUSAR）</b>；研究者对所有 SAE 要立即报申办者</td></tr>
+      <tr><td>"SAE 报告要写真实姓名"</td><td>用<b>唯一识别编码</b>，不得写真实姓名、身份证号和住址</td></tr>
+      <tr><td>"委托 CRO 后申办者免责"</td><td>申办者仍是数据质量和可靠性的<b>最终责任人</b></td></tr>
+      <tr><td>"监查员可以顺手做稽查"</td><td>不可以，稽查员必须独立于试验和体系，不能由监查人员兼任</td></tr>
+      <tr><td>"伦理批准了就不用药监管"</td><td>试验开始前还要向药监申请，获得许可或完成备案</td></tr>
+      <tr><td>"紧急揭盲随便做"</td><td>按方案要求；因 SAE 等紧急揭盲要向申办者<b>书面说明原因</b></td></tr>
+      <tr><td>"试验数据改一下没关系"</td><td>修改必须留痕、不掩盖初始数据，必要时解释理由；CRF 修改要签名、日期、原因</td></tr>
+      <tr><td>"多中心各中心用不同 CRF"</td><td>应使用<b>相同 CRF</b>；额外收集的数据才用附加 CRF</td></tr>
+      <tr><td>"弱势受试者就是未成年人"</td><td>范围很广：危急/无药可救病人、福利院居住者、穷人、流浪者、难民、囚犯、孕妇胎儿、未成年人、无同意能力者等</td></tr>
+      <tr><td>"稽查报告例行交药监"</td><td>一般不要求提供；发现严重违背 GCP 或诉讼期间，药监可要求提供</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s9">
+  <h2><span class="num">09</span>自测 25 题（先答，再展开解析）</h2>
+  <div class="bar"><i></i></div>
+  <details><summary>1. GCP 中首要考虑的是什么？</summary><div class="ans">答：受试者的权益和安全。它高于对科学和社会获益的考虑，并须遵循《赫尔辛基宣言》原则。（第 3 条）</div></details>
+  <details><summary>2. 保障受试者权益的主要措施是什么？</summary><div class="ans">答：伦理委员会与知情同意书。（第 3 条）</div></details>
+  <details><summary>3. 伦理委员会至少由多少人组成？有哪些背景要求？</summary><div class="ans">答：至少 5 人；应有医药相关专业人员、非科学专业背景人员、非临床试验单位成员，并有不同性别；成员均有伦理审查培训和经验。（第 12 条）</div></details>
+  <details><summary>4. 伦理委员会对进行中的试验跟踪审查的最低频度？</summary><div class="ans">答：根据受试者风险程度确定，但至少一年审查一次。（第 11 条）</div></details>
+  <details><summary>5. 未获得伦理委员会书面批准，研究者可以筛选受试者吗？</summary><div class="ans">答：不可以。临床试验开始前研究者应获得伦理委员会书面批准；未获批准前不能筛选受试者。（第 18 条）</div></details>
+  <details><summary>6. 研究者能否擅自修改或违背已批准的方案？</summary><div class="ans">答：不能。除为及时减少受试者紧急危害，或仅涉及管理方面改动（如更换监查员、电话号码），未经申办者同意和伦理委员会批准不得擅自修改或违背；偏离须记录解释并报告。（第 19 条）</div></details>
+  <details><summary>7. 因 SAE 需要紧急揭盲，研究者应怎么做？</summary><div class="ans">答：按方案要求揭盲，并向申办者<b>书面说明揭盲原因</b>。（第 21 条）</div></details>
+  <details><summary>8. 源数据修改的基本要求是什么？</summary><div class="ans">答：修正必须留痕，不能掩盖初始数据，需要时解释修正的理由和依据；源数据应可溯源、清晰、同步记录、原始、准确、完整。（第 24 条）</div></details>
+  <details><summary>9. SAE 报告中能否写受试者真实姓名？</summary><div class="ans">答：不能。应注明受试者在试验中的<b>唯一识别编码</b>，而不是真实姓名、身份证号码和住址。（第 25 条）</div></details>
+  <details><summary>10. SUSAR 死亡或危及生命情况下的报告时限是多久？其他情况呢？</summary><div class="ans">答：死亡和危及生命为 7 天，其他情况为 15 天；申办者向药品监督管理部门和卫生行政部门报告。（第 47 条）</div></details>
+  <details><summary>11. 申办者把工作委托给 CRO 后，谁对数据质量和可靠性负最终责任？</summary><div class="ans">答：申办者仍是最终责任人，应监督 CRO 的各项工作；未明确委托的工作职责仍由申办者承担。（第 32 条）</div></details>
+  <details><summary>12. 监查员可以同时担任稽查员吗？</summary><div class="ans">答：不可以。稽查员必须独立于临床试验和试验相关体系，不能是监查人员兼任，并须经过培训、具有稽查经验和资质证明。（第 50 条）</div></details>
+  <details><summary>13. 申办者向研究者提供试验用药品的前提是什么？</summary><div class="ans">答：在获得伦理委员会和药品监督管理部门批准之前，不得提供试验用药品。（第 44 条）</div></details>
+  <details><summary>14. 知情同意书应由谁签名并注明日期？受试者无阅读能力时怎么办？</summary><div class="ans">答：受试者或其法定代理人、执行知情同意的研究者分别签名并注明日期；若均缺乏阅读能力，须有一位公正的见证人协助见证，见证人也须在知情同意书上签字并注明日期。（第 22 条）</div></details>
+  <details><summary>15. 非治疗性试验由法定代理人代表同意，需要满足哪些条件？</summary><div class="ans">答：临床试验只能在无知情同意能力的受试者中进行；受试者无同意能力；预期风险低；对健康的负面影响已减至最低且法律不禁止；入选已获伦理审查批准。非治疗性试验一般只能在患有试验药物适用疾病或状况的患者中进行，出现过度痛苦或不适应让其退出。（第 22 条）</div></details>
+  <details><summary>16. 必备文件的保存期限如何规定？</summary><div class="ans">答：保存至试验药物批准上市后 2 年，或者临床试验终止后 5 年；申办者应与研究者及机构在合同中明确保存时间、费用和到期处理。申办者文件为上市后至少 2 年或正式停止/暂停后至少 5 年。（第 24、35 条）</div></details>
+  <details><summary>17. 研究者手册应多久审阅修订一次？谁来更新、谁递交伦理？</summary><div class="ans">答：试验期间至少每年审阅和修订一次；申办者负责更新并及时送达研究者，研究者负责把更新手册递交伦理委员会。（第 74 条）</div></details>
+  <details><summary>18. AE 与 SAE 的核心区别是什么？</summary><div class="ans">答：AE 是使用试验用药品后出现的任何不良医学事件，<b>不一定</b>与药物有明确因果关系；SAE 指导致死亡、危及生命、住院或延长住院、永久或严重残疾/功能丧失、先天性异常或出生缺陷的事件，判据是后果严重性。（术语定义）</div></details>
+  <details><summary>19. 多中心试验各中心能否使用不同 CRF？</summary><div class="ans">答：不能。各中心应使用相同 CRF；若研究者增加收集数据且方案中有说明，申办者应提供附加 CRF。还应使用相同方案、统一评价标准、试验前书面明确职责并确保中心间沟通。（第 54 条）</div></details>
+  <details><summary>20. 伦理委员会的审查意见包括哪几种？</summary><div class="ans">答：批准；必要的修正后批准及其修正内容；不批准及其理由；终止或暂停及其理由。（第 11 条）</div></details>
+  <details><summary>21. 受试者可以无理由退出试验吗？退出后权益如何？</summary><div class="ans">答：可以。受试者可无理由退出，研究者应尊重其个人权利并尽量了解理由；退出不会遭到歧视或报复，其医疗待遇与权益不受影响。（第 17 条、第 23 条）</div></details>
+  <details><summary>22. 现场试验用药品由谁负责管理？</summary><div class="ans">答：主要研究者及其供职的医疗机构负有管理责任，并应指派有资格的药师或其他人员管理；接收、储存、分发、回收、退还和未使用药物处置均须遵守规定并保留记录。（第 20 条）</div></details>
+  <details><summary>23. 监查计划应重点强调什么？监查报告何时提交？</summary><div class="ans">答：监查计划应特别强调保护受试者权益、保证数据真实、应对各类风险，并强调对关键数据和流程的监查；监查员每次访视监查后必须作书面报告递送申办者。（第 48、49 条）</div></details>
+  <details><summary>24. 稽查报告是否必须常规提供给药品监督管理部门？</summary><div class="ans">答：一般不要求提供。若发现试验过程中有严重违背 GCP 的证据，或在法律诉讼期间，药监可要求申办者提供稽查报告；申办者应按法规提供稽查证明。（第 50 条）</div></details>
+  <details><summary>25. 必备文件按哪三个阶段归类？试验结束时谁来审核确认？</summary><div class="ans">答：临床试验准备阶段、进行阶段、完成后阶段；试验结束时监查员必须审核确认研究者及机构、申办者各自的必备文件妥善保存。（第 80 条）</div></details>
+</section>
+
+<section id="s11">
+  <h2><span class="num">10</span>综合考核试卷（自动判分，满分 100）</h2>
+  <div class="exam-head">
+    <h3>比逊医疗校招 · GCP 知识考核模拟卷</h3>
+    <p>题型：单选 15 题（30 分）+ 多选 10 题（30 分）+ 判断 10 题（10 分）+ 简答 5 题（30 分）= 100 分</p>
+    <p>先独立作答，再点"交卷判分"；客观题自动评分并显示解析，简答题请对照参考要点自评。</p>
+  </div>
+  <div class="exam-bar">
+    <button class="btn primary" onclick="gradeExam()">交卷判分</button>
+    <button class="btn ghost" onclick="resetExam()">重置答案</button>
+    <button class="btn ghost" onclick="showAllAnswers()">显示全部答案</button>
+  </div>
+  <div class="score-box" id="scoreBox"></div>
+
+  <div class="part-title">一、单选题（共 15 题，每题 2 分，共 30 分）</div>
+  <div class="q" data-type="single" data-answer="C" data-score="2">
+    <p class="qtitle">1. GCP 作为临床试验全过程的标准规定，不包括以下哪一环节？</p>
+    <label><input type="radio" name="q1" value="A"> A. 方案设计</label>
+    <label><input type="radio" name="q1" value="B"> B. 组织实施与执行</label>
+    <label><input type="radio" name="q1" value="C"> C. 药品上市后的市场定价</label>
+    <label><input type="radio" name="q1" value="D"> D. 监查、稽查与总结报告</label>
+    <div class="qexplain">正确答案 C。第 2 条：GCP 包括方案设计、组织实施、执行、监查、稽查、记录、分析、总结和报告，不含市场定价。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="B" data-score="2">
+    <p class="qtitle">2. 受试者的权益和安全是首要考虑，并高于什么？</p>
+    <label><input type="radio" name="q2" value="A"> A. 试验的科学价值</label>
+    <label><input type="radio" name="q2" value="B"> B. 对科学和社会的获益</label>
+    <label><input type="radio" name="q2" value="C"> C. 研究经费的多少</label>
+    <label><input type="radio" name="q2" value="D"> D. 受试者入组的速度</label>
+    <div class="qexplain">正确答案 B。第 3 条：受试者权益和安全高于对科学和社会获益的考虑。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="B" data-score="2">
+    <p class="qtitle">3. 伦理委员会至少由多少人组成？</p>
+    <label><input type="radio" name="q3" value="A"> A. 3 人</label>
+    <label><input type="radio" name="q3" value="B"> B. 5 人</label>
+    <label><input type="radio" name="q3" value="C"> C. 7 人</label>
+    <label><input type="radio" name="q3" value="D"> D. 9 人</label>
+    <div class="qexplain">正确答案 B。第 12 条：至少 5 人，且要有医药相关、非科学背景、非本机构成员并含不同性别。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="C" data-score="2">
+    <p class="qtitle">4. 伦理委员会对进行中临床试验的跟踪审查，最低频度是？</p>
+    <label><input type="radio" name="q4" value="A"> A. 每季度一次</label>
+    <label><input type="radio" name="q4" value="B"> B. 每半年一次</label>
+    <label><input type="radio" name="q4" value="C"> C. 至少一年一次</label>
+    <label><input type="radio" name="q4" value="D"> D. 每两年一次</label>
+    <div class="qexplain">正确答案 C。第 11 条：频度按受试者风险程度确定，但至少一年审查一次。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="B" data-score="2">
+    <p class="qtitle">5. 未获得伦理委员会书面批准，研究者能否筛选受试者？</p>
+    <label><input type="radio" name="q5" value="A"> A. 可以，只要申办者同意</label>
+    <label><input type="radio" name="q5" value="B"> B. 不可以</label>
+    <label><input type="radio" name="q5" value="C"> C. 紧急情况可以</label>
+    <label><input type="radio" name="q5" value="D"> D. 可以先筛选后补批件</label>
+    <div class="qexplain">正确答案 B。第 18 条：未获伦理委员会书面批准之前，不能筛选受试者。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="B" data-score="2">
+    <p class="qtitle">6. 试验药物的制备应符合以下哪项原则？</p>
+    <label><input type="radio" name="q6" value="A"> A. GCP</label>
+    <label><input type="radio" name="q6" value="B"> B. GMP</label>
+    <label><input type="radio" name="q6" value="C"> C. GLP</label>
+    <label><input type="radio" name="q6" value="D"> D. 医疗机构自定标准</label>
+    <div class="qexplain">正确答案 B。第 8 条：试验药物的制备应符合《药品生产质量管理规范》（GMP）原则。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="C" data-score="2">
+    <p class="qtitle">7. SAE 报告中标识受试者身份，应使用？</p>
+    <label><input type="radio" name="q7" value="A"> A. 真实姓名</label>
+    <label><input type="radio" name="q7" value="B"> B. 身份证号码和住址</label>
+    <label><input type="radio" name="q7" value="C"> C. 受试者在试验中的唯一识别编码</label>
+    <label><input type="radio" name="q7" value="D"> D. 病历号即可，无需编码</label>
+    <div class="qexplain">正确答案 C。第 25 条：应注明唯一识别编码，而不是真实姓名、身份证号和住址。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="A" data-score="2">
+    <p class="qtitle">8. SUSAR 中死亡和危及生命的情况，申办者向药监和卫生行政部门报告的时限是？</p>
+    <label><input type="radio" name="q8" value="A"> A. 7 天</label>
+    <label><input type="radio" name="q8" value="B"> B. 15 天</label>
+    <label><input type="radio" name="q8" value="C"> C. 24 小时</label>
+    <label><input type="radio" name="q8" value="D"> D. 30 天</label>
+    <div class="qexplain">正确答案 A。第 47 条：死亡和危及生命为 7 天，其他情况为 15 天。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="C" data-score="2">
+    <p class="qtitle">9. 申办者把工作委托给 CRO 后，谁是数据质量和可靠性的最终责任人？</p>
+    <label><input type="radio" name="q9" value="A"> A. CRO</label>
+    <label><input type="radio" name="q9" value="B"> B. 监查员</label>
+    <label><input type="radio" name="q9" value="C"> C. 申办者</label>
+    <label><input type="radio" name="q9" value="D"> D. 主要研究者</label>
+    <div class="qexplain">正确答案 C。第 32 条：申办者仍是最终责任人，应监督 CRO 的各项工作。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="B" data-score="2">
+    <p class="qtitle">10. 监查员能否同时兼任稽查员？</p>
+    <label><input type="radio" name="q10" value="A"> A. 可以，节省人力</label>
+    <label><input type="radio" name="q10" value="B"> B. 不可以</label>
+    <label><input type="radio" name="q10" value="C"> C. 紧急情况下可以</label>
+    <label><input type="radio" name="q10" value="D"> D. 申办者批准即可</label>
+    <div class="qexplain">正确答案 B。第 50 条：稽查员必须独立于试验和相关体系，不能是监查人员兼任。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="B" data-score="2">
+    <p class="qtitle">11. 研究者手册在试验期间至少多久审阅和修订一次？</p>
+    <label><input type="radio" name="q11" value="A"> A. 每半年</label>
+    <label><input type="radio" name="q11" value="B"> B. 每年</label>
+    <label><input type="radio" name="q11" value="C"> C. 每两年</label>
+    <label><input type="radio" name="q11" value="D"> D. 每三年</label>
+    <div class="qexplain">正确答案 B。第 74 条：试验期间至少每年审阅和修订一次，有新信息时可更频繁。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="B" data-score="2">
+    <p class="qtitle">12. 必备文件应保存至试验药物批准上市后多久，或临床试验终止后多久？</p>
+    <label><input type="radio" name="q12" value="A"> A. 1 年 / 3 年</label>
+    <label><input type="radio" name="q12" value="B"> B. 2 年 / 5 年</label>
+    <label><input type="radio" name="q12" value="C"> C. 3 年 / 5 年</label>
+    <label><input type="radio" name="q12" value="D"> D. 5 年 / 10 年</label>
+    <div class="qexplain">正确答案 B。第 24、35 条：上市后 2 年或终止后 5 年；合同应明确时间与到期处理。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="C" data-score="2">
+    <p class="qtitle">13. 受试者是否可以无理由退出临床试验？</p>
+    <label><input type="radio" name="q13" value="A"> A. 不可以，需申办者批准</label>
+    <label><input type="radio" name="q13" value="B"> B. 需伦理委员会批准方可退出</label>
+    <label><input type="radio" name="q13" value="C"> C. 可以，且不遭到歧视或报复，医疗待遇与权益不受影响</label>
+    <label><input type="radio" name="q13" value="D"> D. 需医生评估后方可退出</label>
+    <div class="qexplain">正确答案 C。第 17、23 条：可无理由退出，权益不受影响。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="B" data-score="2">
+    <p class="qtitle">14. 多中心临床试验中，各中心应使用怎样的病例报告表（CRF）？</p>
+    <label><input type="radio" name="q14" value="A"> A. 各中心自行设计的 CRF</label>
+    <label><input type="radio" name="q14" value="B"> B. 相同的 CRF</label>
+    <label><input type="radio" name="q14" value="C"> C. 完全不同的 CRF</label>
+    <label><input type="radio" name="q14" value="D"> D. 由研究者个人决定</label>
+    <div class="qexplain">正确答案 B。第 54 条：各中心应使用相同 CRF；额外收集数据才用附加 CRF。</div>
+  </div>
+  <div class="q" data-type="single" data-answer="B" data-score="2">
+    <p class="qtitle">15. 受试者及法定代理人均缺乏阅读能力时，知情同意过程须有谁协助和见证？</p>
+    <label><input type="radio" name="q15" value="A"> A. 监查员</label>
+    <label><input type="radio" name="q15" value="B"> B. 公正的见证人</label>
+    <label><input type="radio" name="q15" value="C"> C. 申办者代表</label>
+    <label><input type="radio" name="q15" value="D"> D. 无需额外人员</label>
+    <div class="qexplain">正确答案 B。第 22 条：须有一位公正的见证人协助见证，并在知情同意书上签字注明日期。</div>
+  </div>
+
+  <div class="part-title">二、多选题（共 10 题，每题 3 分，共 30 分，多选/少选均不得分）</div>
+  <div class="q" data-type="multi" data-answer="ABCD" data-score="3">
+    <p class="qtitle">1. 伦理委员会的审查意见包括哪些？</p>
+    <label><input type="checkbox" name="m1" value="A"> A. 批准</label>
+    <label><input type="checkbox" name="m1" value="B"> B. 必要的修正后批准及其修正内容</label>
+    <label><input type="checkbox" name="m1" value="C"> C. 不批准及其理由</label>
+    <label><input type="checkbox" name="m1" value="D"> D. 终止或暂停及其理由</label>
+    <label><input type="checkbox" name="m1" value="E"> E. 直接免除伦理审查</label>
+    <div class="qexplain">正确答案 ABCD。第 11 条：审查意见为批准、必要的修正后批准、不批准、终止或暂停四类。</div>
+  </div>
+  <div class="q" data-type="multi" data-answer="ABCDE" data-score="3">
+    <p class="qtitle">2. 严重不良事件（SAE）包括以下哪些情形？</p>
+    <label><input type="checkbox" name="m2" value="A"> A. 导致死亡</label>
+    <label><input type="checkbox" name="m2" value="B"> B. 危及生命</label>
+    <label><input type="checkbox" name="m2" value="C"> C. 需要住院治疗或延长住院时间</label>
+    <label><input type="checkbox" name="m2" value="D"> D. 导致永久或严重残疾/功能丧失</label>
+    <label><input type="checkbox" name="m2" value="E"> E. 先天性异常、出生缺陷</label>
+    <div class="qexplain">正确答案 ABCDE。术语定义：SAE 的五种后果情形全部入选。</div>
+  </div>
+  <div class="q" data-type="multi" data-answer="AB" data-score="3">
+    <p class="qtitle">3. 保障受试者权益的主要措施是哪两项？</p>
+    <label><input type="checkbox" name="m3" value="A"> A. 伦理委员会</label>
+    <label><input type="checkbox" name="m3" value="B"> B. 知情同意书</label>
+    <label><input type="checkbox" name="m3" value="C"> C. 监查员现场监查</label>
+    <label><input type="checkbox" name="m3" value="D"> D. 申办者质量体系</label>
+    <div class="qexplain">正确答案 AB。第 3 条：伦理委员会与知情同意书是保障受试者权益的主要措施。</div>
+  </div>
+  <div class="q" data-type="multi" data-answer="ABCD" data-score="3">
+    <p class="qtitle">4. 伦理委员会的组成要求包括哪些？</p>
+    <label><input type="checkbox" name="m4" value="A"> A. 医药相关专业人员</label>
+    <label><input type="checkbox" name="m4" value="B"> B. 非科学专业背景人员</label>
+    <label><input type="checkbox" name="m4" value="C"> C. 非临床试验单位成员</label>
+    <label><input type="checkbox" name="m4" value="D"> D. 有不同性别的委员，至少 5 人</label>
+    <label><input type="checkbox" name="m4" value="E"> E. 全部由本机构临床医生组成</label>
+    <div class="qexplain">正确答案 ABCD。第 12 条要求多背景、不同性别、至少 5 人，E 与要求相悖。</div>
+  </div>
+  <div class="q" data-type="multi" data-answer="ABCDE" data-score="3">
+    <p class="qtitle">5. 知情同意书和其他文字资料须包括哪些内容？</p>
+    <label><input type="checkbox" name="m5" value="A"> A. 试验目的、研究性与随机分组可能性</label>
+    <label><input type="checkbox" name="m5" value="B"> B. 可能的风险、不便与预期获益（含不能获益的可能）</label>
+    <label><input type="checkbox" name="m5" value="C"> C. 自愿参加、可随时退出而不受歧视或报复</label>
+    <label><input type="checkbox" name="m5" value="D"> D. 损害时的补偿/治疗及参加补偿、预期花费</label>
+    <label><input type="checkbox" name="m5" value="E"> E. 新信息告知、联系人及联系方式、保密说明</label>
+    <div class="qexplain">正确答案 ABCDE。第 23 条共 20 项，以上均为其中要点。</div>
+  </div>
+  <div class="q" data-type="multi" data-answer="ABCDEF" data-score="3">
+    <p class="qtitle">6. 试验用药品管理记录应包括哪些内容？</p>
+    <label><input type="checkbox" name="m6" value="A"> A. 日期、数量</label>
+    <label><input type="checkbox" name="m6" value="B"> B. 批号/序列号</label>
+    <label><input type="checkbox" name="m6" value="C"> C. 有效期</label>
+    <label><input type="checkbox" name="m6" value="D"> D. 分配编码</label>
+    <label><input type="checkbox" name="m6" value="E"> E. 签名</label>
+    <label><input type="checkbox" name="m6" value="F"> F. 受试者用量和剂量记录</label>
+    <div class="qexplain">正确答案 ABCDEF。第 20 条：记录含日期、数量、批号/序列号、有效期、分配编码、签名，并保存每位受试者用量和剂量。</div>
+  </div>
+  <div class="q" data-type="multi" data-answer="ABCDE" data-score="3">
+    <p class="qtitle">7. 以下哪些属于申办者的职责？</p>
+    <label><input type="checkbox" name="m7" value="A"> A. 建立质量管理体系、开展风险管理</label>
+    <label><input type="checkbox" name="m7" value="B"> B. 选择研究者及机构并签订合同</label>
+    <label><input type="checkbox" name="m7" value="C"> C. 提供试验用药品和研究者手册</label>
+    <label><input type="checkbox" name="m7" value="D"> D. 负责安全性评估并按规定报告</label>
+    <label><input type="checkbox" name="m7" value="E"> E. 指派监查员、开展稽查</label>
+    <div class="qexplain">正确答案 ABCDE。第 29–54 条：均为申办者职责。</div>
+  </div>
+  <div class="q" data-type="multi" data-answer="ABCDEF" data-score="3">
+    <p class="qtitle">8. 源数据应具备哪些特性？</p>
+    <label><input type="checkbox" name="m8" value="A"> A. 可溯源</label>
+    <label><input type="checkbox" name="m8" value="B"> B. 清晰</label>
+    <label><input type="checkbox" name="m8" value="C"> C. 同步记录</label>
+    <label><input type="checkbox" name="m8" value="D"> D. 原始</label>
+    <label><input type="checkbox" name="m8" value="E"> E. 准确</label>
+    <label><input type="checkbox" name="m8" value="F"> F. 完整</label>
+    <div class="qexplain">正确答案 ABCDEF。第 24 条：源数据可溯源、清晰、同步、原始、准确、完整，修正必须留痕。</div>
+  </div>
+  <div class="q" data-type="multi" data-answer="ABCDE" data-score="3">
+    <p class="qtitle">9. 临床试验方案中的基本信息应包括哪些？</p>
+    <label><input type="checkbox" name="m9" value="A"> A. 方案标题、编号和日期（修改标明版本号和日期）</label>
+    <label><input type="checkbox" name="m9" value="B"> B. 申办者名称、地址及授权签署人</label>
+    <label><input type="checkbox" name="m9" value="C"> C. 申办者医学专家信息</label>
+    <label><input type="checkbox" name="m9" value="D"> D. 主要研究者姓名、职称及机构地址电话</label>
+    <label><input type="checkbox" name="m9" value="E"> E. 参与实验室及相关机构名称、地址</label>
+    <div class="qexplain">正确答案 ABCDE。第 55 条列出以上基本信息。</div>
+  </div>
+  <div class="q" data-type="multi" data-answer="ABCDE" data-score="3">
+    <p class="qtitle">10. 伦理委员会应审查的文件包括哪些？</p>
+    <label><input type="checkbox" name="m10" value="A"> A. 临床试验方案和方案修正案</label>
+    <label><input type="checkbox" name="m10" value="B"> B. 受试者书面知情同意书及更新件、招募方式与信息</label>
+    <label><input type="checkbox" name="m10" value="C"> C. 研究者手册与现有安全性资料</label>
+    <label><input type="checkbox" name="m10" value="D"> D. 包含受试者补偿信息的文件</label>
+    <label><input type="checkbox" name="m10" value="E"> E. 研究者最新履历及资质证明文件</label>
+    <div class="qexplain">正确答案 ABCDE。第 11 条（二）列举的审查文件均包含。</div>
+  </div>
+
+  <div class="part-title">三、判断题（共 10 题，每题 1 分，共 10 分）</div>
+  <div class="q" data-type="judge" data-answer="T" data-score="1">
+    <p class="qtitle">1. 受试者的权益和安全高于对科学和社会获益的考虑。</p>
+    <label><input type="radio" name="j1" value="T"> 正确</label>
+    <label><input type="radio" name="j1" value="F"> 错误</label>
+    <div class="qexplain">正确答案：正确。第 3 条明确此原则。</div>
+  </div>
+  <div class="q" data-type="judge" data-answer="T" data-score="1">
+    <p class="qtitle">2. 伦理委员会至少由 5 人组成，并应有不同性别的委员。</p>
+    <label><input type="radio" name="j2" value="T"> 正确</label>
+    <label><input type="radio" name="j2" value="F"> 错误</label>
+    <div class="qexplain">正确答案：正确。第 12 条。</div>
+  </div>
+  <div class="q" data-type="judge" data-answer="F" data-score="1">
+    <p class="qtitle">3. 监查员工作繁忙时可以兼任稽查员，以提高效率。</p>
+    <label><input type="radio" name="j3" value="T"> 正确</label>
+    <label><input type="radio" name="j3" value="F"> 错误</label>
+    <div class="qexplain">正确答案：错误。第 50 条：稽查员不能是监查人员兼任，须保持独立。</div>
+  </div>
+  <div class="q" data-type="judge" data-answer="F" data-score="1">
+    <p class="qtitle">4. 受试者退出临床试验必须得到申办者批准。</p>
+    <label><input type="radio" name="j4" value="T"> 正确</label>
+    <label><input type="radio" name="j4" value="F"> 错误</label>
+    <div class="qexplain">正确答案：错误。第 17、23 条：受试者可无理由随时退出。</div>
+  </div>
+  <div class="q" data-type="judge" data-answer="F" data-score="1">
+    <p class="qtitle">5. SAE 报告应写明受试者真实姓名，以便准确追溯。</p>
+    <label><input type="radio" name="j5" value="T"> 正确</label>
+    <label><input type="radio" name="j5" value="F"> 错误</label>
+    <div class="qexplain">正确答案：错误。第 25 条：使用唯一识别编码，不写真实姓名、身份证号和住址。</div>
+  </div>
+  <div class="q" data-type="judge" data-answer="F" data-score="1">
+    <p class="qtitle">6. 申办者把工作委托给 CRO 后，就不再对数据质量承担责任。</p>
+    <label><input type="radio" name="j6" value="T"> 正确</label>
+    <label><input type="radio" name="j6" value="F"> 错误</label>
+    <div class="qexplain">正确答案：错误。第 32 条：申办者仍是最终责任人。</div>
+  </div>
+  <div class="q" data-type="judge" data-answer="T" data-score="1">
+    <p class="qtitle">7. 为及时减少受试者的紧急危害，研究者可在未获伦理批准时偏离方案，但须及时报告并说明理由。</p>
+    <label><input type="radio" name="j7" value="T"> 正确</label>
+    <label><input type="radio" name="j7" value="F"> 错误</label>
+    <div class="qexplain">正确答案：正确。第 19 条：紧急危害可先偏离，之后向伦理、申办者报告，必要时报药监。</div>
+  </div>
+  <div class="q" data-type="judge" data-answer="F" data-score="1">
+    <p class="qtitle">8. 稽查报告需例行常规提供给药品监督管理部门。</p>
+    <label><input type="radio" name="j8" value="T"> 正确</label>
+    <label><input type="radio" name="j8" value="F"> 错误</label>
+    <div class="qexplain">正确答案：错误。第 50 条：一般不要求提供；严重违背 GCP 或诉讼期间药监可要求。</div>
+  </div>
+  <div class="q" data-type="judge" data-answer="F" data-score="1">
+    <p class="qtitle">9. 只要获得伦理委员会批准，试验开始前无需再向药监申请许可或备案。</p>
+    <label><input type="radio" name="j9" value="T"> 正确</label>
+    <label><input type="radio" name="j9" value="F"> 错误</label>
+    <div class="qexplain">正确答案：错误。第 40 条：试验开始前申办者应向药监提出申请，获得许可或完成备案。</div>
+  </div>
+  <div class="q" data-type="judge" data-answer="F" data-score="1">
+    <p class="qtitle">10. 知情同意书应尽量使用专业术语，以体现研究的严谨性。</p>
+    <label><input type="radio" name="j10" value="T"> 正确</label>
+    <label><input type="radio" name="j10" value="F"> 错误</label>
+    <div class="qexplain">正确答案：错误。第 22 条：应采用通俗易懂的语言和表达方式，便于理解。</div>
+  </div>
+
+  <div class="part-title">四、简答题（共 5 题，每题 6 分，共 30 分，请对照参考要点自评）</div>
+  <details><summary>1. 什么是 GCP？它涵盖临床试验的哪些环节？</summary><div class="short-ans"><b>参考要点：</b>GCP 即《药物临床试验质量管理规范》，是临床试验全过程的标准规定（第 2 条）。涵盖方案设计、组织实施、执行、监查、稽查、记录、分析、总结和报告。目的：保证过程规范，数据和结果科学、真实、可靠，保护受试者权益和安全（第 1 条）。</div></details>
+  <details><summary>2. 简述知情同意过程的核心要求（至少 5 点）。</summary><div class="short-ans"><b>参考要点：</b>① 遵循法规、GCP 与赫尔辛基原则，知情同意书经伦理批准后才开始；② 用通俗易懂语言，给足时间和机会答疑；③ 不得强迫、利诱，不得含放弃权益或免责的语言；④ 受试者或其法定代理人、执行知情同意的研究者分别签名并注明日期；⑤ 受试者获得签署后的副本；⑥ 有新信息时书面告知，经伦理批准后再次签署；⑦ 无阅读能力者须有公正见证人并签字。</div></details>
+  <details><summary>3. SAE 报告有哪些基本要求？</summary><div class="short-ans"><b>参考要点：</b>① 除方案/手册规定无需立即报告者外，其他 SAE 应立即报告申办者，随后及时提供详尽书面报告；② 报告注明受试者唯一识别编码，不用真实姓名、身份证号、住址；③ 研究者还应向伦理委员会报告；④ 死亡事件提供尸检报告、最终医学报告等补充资料；⑤ 方案中规定的重要不良事件和实验室异常按规定时限报告。</div></details>
+  <details><summary>4. 比较监查、稽查、检查的区别。</summary><div class="short-ans"><b>参考要点：</b>① 监查（Monitoring）：由申办者指派的监查员执行，监督试验进展和过程，保证按方案、SOP、GCP、法规实施记录报告，是申办者与研究者主要联系人；② 稽查（Audit）：申办者选定的独立稽查员，系统、独立核查试验行为与文件，评估依从性，不能由监查员兼任；③ 检查（Inspection）：药品监督管理部门的官方审阅，可在试验单位、申办者或 CRO 所在地进行。</div></details>
+  <details><summary>5. 必备文件如何管理与保存？</summary><div class="short-ans"><b>参考要点：</b>① 必备文件用于评价试验实施、证明遵守 GCP 与法规，是稽查和检查的主要内容，也是确认真实性和数据完整性的依据；② 按准备、进行、完成三阶段归类，每份文件说明目的与保管方；③ 保存条件避光、防水、利于长期保存，易于识别查找调阅归位；④ 保存至试验药物批准上市后 2 年或临床试验终止后 5 年，合同中明确时间、费用及到期处理；⑤ 试验结束时监查员必须审核确认各方必备文件妥善保存。</div></details>
+  <div class="note">判分说明：客观题（单选、多选、判断）共 70 分自动评分；简答题 30 分请对照参考要点自评（建议按要点覆盖率给分）。总分 100 分，建议 80 分以上为掌握良好。</div>
+</section>
+
+<section id="s10">
+  <h2><span class="num">11</span>考前 10 分钟速览</h2>
+  <div class="cols">
+    <div class="card">
+      <div class="role">一条主线</div>
+      <p>受试者权益和安全 &gt; 科学和社会获益；靠伦理委员会 + 知情同意书两把伞保护。</p>
+    </div>
+    <div class="card">
+      <div class="role teal">四个动作</div>
+      <p><b>审</b>（伦理先批）、<b>做</b>（按方案执行）、<b>记</b>（原始真实可溯源）、<b>报</b>（SAE/SUSAR 按时报）。</p>
+    </div>
+    <div class="card">
+      <div class="role amber">五类人</div>
+      <p>申办者（总责）、研究者（执行）、伦理委员会（把关）、监查员（盯现场）、稽查员（查体系）；CRO 受托不免责。</p>
+    </div>
+    <div class="card">
+      <div class="role red">六组数字</div>
+      <p>5 人 / 一年一次 / 5 年 / 2 年 / 7 天与 15 天 / 20 项内容。</p>
+    </div>
+  </div>
+  <div class="tip"><b>遇到不会的题怎么蒙：</b>涉及"能不能做"——先想伦理批准没有；涉及"谁负责"——优先申办者（最终责任）或 PI（现场责任）；涉及"记录"——选留痕、不掩盖、签名日期；涉及"受试者"——选保护权益、自愿退出、保密补偿。这四条蒙题规律命中率很高。</div>
+  <p class="foot">整理自《【比逊医疗】校园招聘笔试GCP学习资料.pdf》｜仅供笔试复习使用</p>
+</section>
+
+</main>
+</div>
+<script>
+  function normalize(s){return (s||'').split('').filter(function(c){return /[A-F]/.test(c)}).sort().join('');}
+  function gradeExam(){
+    var qs=document.querySelectorAll('#s11 .q'),score=0,full=0,correct=0,total=0;
+    qs.forEach(function(q){
+      var type=q.getAttribute('data-type'),ans=q.getAttribute('data-answer'),pt=parseFloat(q.getAttribute('data-score'));
+      var picked=[];
+      q.querySelectorAll('input:checked').forEach(function(i){picked.push(i.value)});
+      var ok=false;
+      if(type==='multi'){ok=normalize(picked.join(''))===normalize(ans)&&picked.length>0;}
+      else{ok=picked.length===1&&picked[0]===ans;}
+      total++;full+=pt;
+      q.classList.remove('correct','wrong');
+      if(picked.length===0){return;}
+      if(ok){score+=pt;correct++;q.classList.add('correct');}
+      else{q.classList.add('wrong');}
+    });
+    var box=document.getElementById('scoreBox');
+    box.style.display='block';
+    var rate=full?Math.round(score/full*100):0;
+    box.innerHTML='<b>本次得分：'+score+' / '+full+' 分（客观题得分率 '+rate+'%）</b>　|　客观题答对 '+correct+' / '+total+' 题。<br>'+
+      '简答题共 30 分请对照上方参考要点自评；总分 100 分，建议 80 分以上为掌握良好。<br>'+
+      '<span style="font-size:12.5px">提示：标绿为正确，标红为错误，未作答不判分；展开题下方可查看解析。</span>';
+    box.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+  function resetExam(){
+    document.querySelectorAll('#s11 input').forEach(function(i){i.checked=false});
+    document.querySelectorAll('#s11 .q').forEach(function(q){q.classList.remove('correct','wrong')});
+    var box=document.getElementById('scoreBox');box.style.display='none';box.innerHTML='';
+  }
+  function showAllAnswers(){
+    document.querySelectorAll('#s11 .q').forEach(function(q){
+      q.classList.remove('wrong');q.classList.add('correct');
+    });
+    var box=document.getElementById('scoreBox');
+    box.style.display='block';
+    box.innerHTML='<b>已展开全部解析（绿色仅表示显示答案，不代表你答对）。</b> 请重新作答后再点"交卷判分"检验掌握程度。';
+  }
+</script>
+</body>
+</html>
